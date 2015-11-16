@@ -5,42 +5,48 @@ var state_machine = require('../state_machine/state.js')
 function Monster(id)
 {
 	entity_js.Entity.call(this,id)
-    this._type = 'Monster'
-    this.position = [10,2,0]
+    entity_js.Entity.prototype._type = 'Monster'
+    // this.position = [10,2,0]
 
 	this.talk = function()
 	{
-		console.log("hahahah I am a monster")
-		this.position = [Math.random()*100,Math.random()*100,0]
+		entity_js.Entity.prototype.position = [Math.random()*100,Math.random()*100,0.0]
+		console.log("hahahah I am a monster"+entity_js.Entity.prototype.position)
 	}
 
 	this.idle = function()
 	{
-		this.position = [Math.random()*100,Math.random()*100,0]
-		console.log("idle...idle....annoy")
+		console.log("idle......"+entity_js.Entity.prototype.position)
+		entity_js.Entity.prototype.position = [Math.random()*100,Math.random()*100,0.0]
+		console.log("idle...idle....annoy"+entity_js.Entity.prototype.getId.apply(this)+entity_js.Entity.prototype.position)
 	}
 
 	this.fighting = function()
 	{
-		this.position = [Math.random()*100,Math.random()*100,0]
-		console.log("fighting..fighting...I love it")
+		entity_js.Entity.prototype.position = [Math.random()*100,Math.random()*100,0.0]
+		console.log("fighting..fighting...I love it"+entity_js.Entity.prototype.position)
 	}
 
 	this.runaway = function()
 	{
-		this.position = [Math.random()*100,Math.random()*100,0]
-		console.log("runaway..runaway...I hate it")
+		entity_js.Entity.prototype.position = [Math.random()*100,Math.random()*100,0.0]
+		console.log("runaway..runaway...I hate it"+entity_js.Entity.prototype.position)
 	}
 
 	this.machine = new state_machine.StateMachine(this)
 }
 
 Monster.prototype = new entity_js.Entity()
+Monster.prototype.parent = entity_js.Entity.prototype
 Monster.prototype.constructor = Monster
-
+Monster.prototype.getId = entity_js.Entity.getId
 Monster.prototype.enterWorld = function()
 {
-
+	console.log("this is enterWorld of monster...")
+	setTimeout(this.idle,0)
+	setTimeout(this.talk,2000)
+	setTimeout(this.fighting,5000)
+	setTimeout(this.runaway,10000)
 }
 
 exports.Monster = Monster

@@ -132,7 +132,7 @@ function rpc_proxy (entity,function_name,params) {
    rpc_string += '"function_name" : "'+ function_name+'",'
    rpc_string += '"params" : '+ JSON.stringify(params)+''
    rpc_string += '}'
-   // console.log("the rpc_proxy...."+rpc_string)
+   console.log("the rpc_proxy...."+rpc_string)
    conn.broadcast(rpc_string.length+rpc_string)
 }
 
