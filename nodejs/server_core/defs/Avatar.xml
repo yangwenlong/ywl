@@ -1,0 +1,14 @@
+<root>
+	<Properties>
+		<username>
+			<Type>			STRING				</Type>
+			<Flags>			ALL_CLIENTS			</Flags>
+		</username>
+		<password>
+			<Type>			STRING				</Type>
+			<Flags>			CELL_PUBLIC			</Flags>
+		</password>
+	</Properties>
+	<cellMethod/>
+	<clientMethod/>
+</root>
