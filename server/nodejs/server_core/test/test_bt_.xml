@@ -1,0 +1,9 @@
+<Behavior>
+  <RootNode Type="Root">
+    <Node Type="Sequence">
+        <Node Operation="has_target" params="" Type="Condition"/>
+        <Node Operation="distance_lower_than" params="1.0" Type="Condition"/>
+        <Node Module="ShowTextAction" params="hahaha" Type="Action"/>
+    </Node>
+  </RootNode>
+</Behavior>
