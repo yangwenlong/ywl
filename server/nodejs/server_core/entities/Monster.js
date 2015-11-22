@@ -4,8 +4,9 @@ var state_machine = require('../state_machine/state.js')
 
 function Monster(id)
 {
+	console.log("the id is "+id)
 	entity_js.Entity.call(this,id)
-    entity_js.Entity.prototype._type = 'Monster'
+    this._type = 'Monster'
     // this.position = [10,2,0]
 
 	this.talk = function()
@@ -33,20 +34,27 @@ function Monster(id)
 		console.log("runaway..runaway...I hate it"+entity_js.Entity.prototype.position)
 	}
 
-	this.machine = new state_machine.StateMachine(this)
+	// this.machine = new state_machine.StateMachine(this)
 }
 
+
+
 Monster.prototype = new entity_js.Entity()
-Monster.prototype.parent = entity_js.Entity.prototype
 Monster.prototype.constructor = Monster
-Monster.prototype.getId = entity_js.Entity.getId
 Monster.prototype.enterWorld = function()
 {
 	console.log("this is enterWorld of monster...")
-	setTimeout(this.idle,0)
-	setTimeout(this.talk,2000)
-	setTimeout(this.fighting,5000)
-	setTimeout(this.runaway,10000)
+	// setTimeout(this.idle,0)
+	// setTimeout(this.talk,2000)
+	// setTimeout(this.fighting,5000)
+	// setTimeout(this.runaway,10000)
+	this.showTextAction(0,"hahah")
+}
+
+// //pos为偏移量
+Monster.prototype.showTextAction = function(pos,text)
+{
+	entity_js.rpc_proxy(this,'showTextAction',text)
 }
 
 exports.Monster = Monster

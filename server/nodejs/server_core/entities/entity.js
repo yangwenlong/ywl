@@ -114,11 +114,13 @@ exports.create_entity = function(xml_path,cb_func)
                
             }
             entities[entity.getId()] = entity
-            entity.enterWorld()
+            
             if(cb_func)
             {
                 cb_func(entity)
             }
+
+            entity.enterWorld()
         })
     })
 }
@@ -136,6 +138,8 @@ function rpc_proxy (entity,function_name,params) {
    conn.broadcast(rpc_string.length+rpc_string)
 }
 
+exports.rpc_proxy = rpc_proxy
+
 //create entity proxy
 exports.rpc_create_proxy = function(entity) {
    var rpc_string = '{'
@@ -143,7 +147,7 @@ exports.rpc_create_proxy = function(entity) {
    rpc_string += '"_type" : "'+ entity._type+'",'
    rpc_string += '"type" : "__create_entity"'+ ''
    rpc_string += '}'
-   // console.log("the rpc_create_proxy...."+rpc_string)
+   console.log("the rpc_create_proxy...."+rpc_string)
    conn.broadcast(rpc_string.length+rpc_string)
 }
 

@@ -124,17 +124,12 @@ Behavior_Tree = function()
 
 	this.run_bt = function(tree,ent)
 	{
-		// util = require("util")
-		// console.log("the behavior_tree is "+this.behavior_tree+util.inspect(this))	
+		
 		if(tree)
 		{
-			console.log("this is .....behavior_tree")
 			var tick = new blackboard.Tick(this,ent)
 			tree.execute(tick)
 		}
-		// var _this = this
-
-		// setTimeout(_this.run_bt(ent),1000)
 	}
 }
 

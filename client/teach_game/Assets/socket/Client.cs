@@ -177,7 +177,7 @@ public class AsynchronousClient
 
 		} else if (json ["type"].ToString() == "__set__function") {
 			object[] ps;
-
+            Debug.Log("this is __set_function..." + json["function_name"]);
 			if(json["params"].IsArray){
 				ps = new object[json["params"].Count];
 				for(int i=0;i<ps.Length;i++)

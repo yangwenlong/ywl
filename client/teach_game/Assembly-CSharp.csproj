@@ -74,7 +74,7 @@
  <HintPath>D:/unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
- <HintPath>E:/game/client/teach_game/Assets/plugins/LitJson.dll</HintPath>
+ <HintPath>E:/game_git/ywl/client/teach_game/Assets/plugins/LitJson.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
  <HintPath>D:/unity/Editor/Data/Managed/Mono.Cecil.dll</HintPath>

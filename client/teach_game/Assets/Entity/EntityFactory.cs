@@ -12,6 +12,7 @@ using UnityEngine;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace EntityNS
 {
@@ -44,6 +45,13 @@ namespace EntityNS
 			String data = "{\"id\":"+this.id+",\"function\":\"position\",\"params\":\"["+x+","+y+","+z+"]\"}";
 			AsynchronousClient.Send (data);
 		}
+
+        public void showTextAction(string text)
+        {
+            Debug.Log("this is showTextAction..." + text);
+            GameObject c = GameObject.Find("Text");
+            c.GetComponent<Text>().text = text;
+        }
 	}
 	
 

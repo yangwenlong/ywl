@@ -1,4 +1,6 @@
 var bt_node = require("./bt_node.js")
+var tables = require("../util/tables.js")
+var inspect = require("util").inspect
 
 var ShowTextAction = function(tick)
 {
@@ -13,10 +15,16 @@ ShowTextAction.prototype.execute = function(tick)
 
 ShowTextAction.prototype.step = function(tick)
 {
-	console.log("hahaha")
+	var ent = tick.ent
+	if(tables.getAiText(ent.count)==undefined)
+	{
+		return bt_node.FAILURE
+	}
+	console.log("hahaha"+tables.getAiText(ent.count).TEXT)
+	// console.log(inspect(tables))
+	ent.count += 1
 	return bt_node.SUCCESS
 }
-
 
 
 var PlayModelAction = function(tick)

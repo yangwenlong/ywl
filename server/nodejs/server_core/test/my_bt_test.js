@@ -4,6 +4,7 @@ var util = require("util")
 var bt = new bt_tree.Behavior_Tree()
 var entity = function()
 {
+	this.count = 1
 	this.has_target = function(x)
 	{
 		return true

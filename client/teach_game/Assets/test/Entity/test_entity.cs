@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EntityNS;
+using UnityEngine.UI;
 
 public class test_entity : MonoBehaviour {
 
@@ -20,5 +21,5 @@ public class test_entity : MonoBehaviour {
 			//Debug.Log("the asynchr string is "+AsynchronousClient
 			AsynchronousClient.ProcessPackage();
 		}
-	}
+    }
 }

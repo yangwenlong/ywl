@@ -10,5 +10,10 @@
 		</password>
 	</Properties>
 	<cellMethod/>
-	<clientMethod/>
+	<clientMethod>
+		<showTextAction>
+			<Type> 		Array					</Type><!-->位置<-->
+			<Type> 		STRING					</Type><!-->内容<-->
+		</showTextAction>
+	</clientMethod>
 </root>
