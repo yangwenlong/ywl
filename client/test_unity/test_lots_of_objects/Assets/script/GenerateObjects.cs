@@ -19,9 +19,11 @@ public class GenerateObjects : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 	    for(int i=0;i<wolfs.Count;i++)
         {
             wolfs[i].transform.position += new Vector3(-0.1f, 0, 0);
         }
+        */
 	}
 }

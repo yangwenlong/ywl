@@ -1,9 +1,11 @@
 // var util = require("ai_util.js")
-var blackboard = require("./blackboard.js")
+var blackboard = require("./blackboard.js").global_black_board
+var Tick = require("./blackboard.js").Tick
 
 var bt_node = require("./bt_node.js")
 var util = require("util")
 var action = require("./action.js")
+var condition = require("./condition.js")
 
 Behavior_Tree = function()
 {
@@ -66,7 +68,13 @@ Behavior_Tree = function()
 	            		}
 	            		else if(node_type=='Condition')
 	            		{
-	            			return new bt_node.ConditionNode(node["Operation"],node["params"])
+	            			var module = node["Module"]
+	            			var params = node["params"]
+	            			if(module)
+	            			{
+	            				return new condition[module](params)
+	            			}
+	            			return new bt_node.ConditionNode()
 	            		}
 	            		else if(node_type=='Action')
 	            		{
@@ -88,11 +96,11 @@ Behavior_Tree = function()
 	            		}
 	            		else if(node_type=="Root")
 	            		{
-	            			return new bt_node.BaseNode()
+	            			return new bt_node.LinkNode()
 	            		}
 	            		else
 	            		{
-	            			return new bt_node.BaseNode()
+	            			return new bt_node.LinkNode()
 	            		}
 	            	}
 	            	//create node
@@ -124,11 +132,27 @@ Behavior_Tree = function()
 
 	this.run_bt = function(tree,ent)
 	{
-		
+	
+		// console.log(util.inspect(tree,true,20))
+
 		if(tree)
 		{
-			var tick = new blackboard.Tick(this,ent)
+			var last_open_nodes = global_black_board.get_open_nodes_of_tree(this,ent)
+			
+			var tick = new Tick(this,ent)
 			tree.execute(tick)
+
+			var current_open_nodes = tick.get_open_nodes_of_tree()
+
+			for(var last_open_node_id in last_open_nodes)
+			{
+				var node = current_open_nodes[last_open_node_id]
+				if(!node)
+				{
+					last_open_nodes[last_open_node_id].close(tick)
+				}
+			}
+
 		}
 	}
 }

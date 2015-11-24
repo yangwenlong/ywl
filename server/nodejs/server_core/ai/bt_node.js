@@ -1,5 +1,5 @@
 var util = require("./ai_util.js")
-var blackboard = require("./blackboard.js")
+var blackboard = require("./blackboard.js").global_black_board
 var inspect = require("util").inspect
 // NODE STATES ================================================================
 var START     = 0
@@ -36,41 +36,85 @@ var BaseNode = function() {
 // }
  
 BaseNode.prototype.execute = function(tick) {
+	this.enterNode(tick)
+
+	this.open(tick)
+
+	var status = this._execute(tick)
+
+	if(status!=RUNNING)
+	{
+		this.close(tick)	
+	}
+	
+	this.leaveNode(tick)
+	return status
+}
+
+BaseNode.prototype._execute = function(tick)
+{
+	return FAILURE
+}
+
+BaseNode.prototype.enterNode = function(tick)
+{
+	
+}
+
+BaseNode.prototype.leaveNode = function(tick)
+{
+	var is_open = blackboard.get_open_nodes(tick.tree,tick.ent,this)
+	if(!is_open)
+	{
+		tick.set_open_nodes_of_tree(this)
+	}
+}
+
+
+
+BaseNode.prototype.open = function(tick)
+{
+	var is_open = blackboard.get_open_nodes(tick.tree,tick.ent,this)
+	if(!is_open)
+	{
+		blackboard.set_open_nodes(tick.tree,tick.ent,this,true)
+	}
+	this._open(tick)
+}
+
+BaseNode.prototype._open = function(tick)
+{
+
+}
+
+BaseNode.prototype.close = function(tick)
+{
+	this._close(tick)
+	blackboard.set_open_nodes(tick.tree,tick.ent,this,false)
+}
+
+BaseNode.prototype._close = function(tick)
+{
+
+}
+
+// link node
+var LinkNode = function()
+{
+	BaseNode.call(this)
+}
+
+LinkNode.prototype = new BaseNode()
+
+LinkNode.prototype._execute = function(tick) {
 	if(this.children.length==1)
 	{
-		console.log("this is BaseNode")
 		this.children[0].execute(tick)
 	}
     return true
 }
 
-BaseNode.prototype.enterNode = function(tick)
-{
-	//拷贝tick中的各种属性
-	var state = blackboard.get_entity_state(tick.tree,this,tick.ent)
-	if(state)
-		this._state = state
-	else
-		this._state = START
-}
 
-BaseNode.prototype.leaveNode = function(tick)
-{
-	//移除node中的各种属性
-	blackboard.set_entity_state(tick.tree,this,tick.ent,this._state)
-	this._state = START
-}
-
-
-BaseNode.prototype.get_state = function()
-{
-	return this._state
-}
-
-BaseNode.prototype.set_state = function(state)
-{
-	this._state = state
-}
 
 // Executes behaviors in priority order until one of them is successful.
 // Attempts to execute children in the order they were added.
@@ -86,7 +130,7 @@ var SelectNode = function()
 
 SelectNode.prototype = new BaseNode()
 
-SelectNode.prototype.execute = function(tick)
+SelectNode.prototype._execute = function(tick)
 {
 	console.log("this is SelectNode")
 	for(var child_name in this.children)
@@ -115,12 +159,11 @@ var SeqNode = function()
 
 SeqNode.prototype = new BaseNode()
 
-SeqNode.prototype.execute = function(tick)
+SeqNode.prototype._execute = function(tick)
 {
 	console.log("this is SeqNode")
 	for(var child_name in this.children)
 	{
-		
 		var child = this.children[child_name]
 		var status = child.execute(tick)
 		if(status!=SUCCESS)
@@ -137,7 +180,7 @@ var ParallelNode = function()
 	BaseNode.call(this)
 }
 ParallelNode.prototype = new BaseNode()
-ParallelNode.prototype.execute = function(tick)
+ParallelNode.prototype._execute = function(tick)
 {
 	console.log("this is ParallelNode")
 	for(var child_name in this.children)
@@ -145,6 +188,7 @@ ParallelNode.prototype.execute = function(tick)
 		var child = this.children[child_name]
 		var status = child.execute(tick)
 	}
+	return SUCCESS
 }
 
 
@@ -152,10 +196,10 @@ ParallelNode.prototype.execute = function(tick)
 
 var ActionNode = function()
 {
-	BaseNode.apply()
+	BaseNode.call(this)
 }
 ActionNode.prototype = new BaseNode()
-ActionNode.prototype.execute = function(tick)
+ActionNode.prototype._execute = function(tick)
 {
 	console.log("this is ActionNode")
 	return this.step(tick)
@@ -167,15 +211,13 @@ ActionNode.prototype.step = function(tick)
 }
 
 
-var ConditionNode = function(operation,params)
+var ConditionNode = function()
 {
 	BaseNode.call(this)
-	this._operation = operation
-	this._params = params
 }
 
 ConditionNode.prototype = new BaseNode()
-ConditionNode.prototype.execute = function(tick)
+ConditionNode.prototype._execute = function(tick)
 {
 	console.log("this is ConditionNode")
 	return this.step(tick)
@@ -183,19 +225,13 @@ ConditionNode.prototype.execute = function(tick)
 ConditionNode.prototype.step = function(tick)
 {
 	var ent = tick.ent
-	var result = ent[this._operation](this._params)
-	if(result)
-		return SUCCESS
-	return FAILURE
+	
+	return SUCCESS
 }
 
-
-var If_True_Condition_Action_Else_Action = function(tick)
-{
-
-}
 
 exports.BaseNode = BaseNode
+exports.LinkNode = LinkNode
 exports.SelectNode = SelectNode
 exports.SeqNode = SeqNode
 exports.ActionNode = ActionNode

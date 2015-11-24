@@ -1,9 +1,10 @@
 <Behavior>
   <RootNode Type="Root">
     <Node Type="Sequence">
-        <Node Operation="has_target" params="" Type="Condition"/>
-        <Node Operation="distance_lower_than" params="1.0" Type="Condition"/>
+        <Node Module="CircleTrap" params="10000" Type="Condition"/>
+        <Node Module="TimerReached" params="10000" Type="Condition"/>
         <Node Module="ShowTextAction" params="hahaha" Type="Action"/>
+        <Node Module="WanderAction" params="0.1" Type="Action"/>
     </Node>
   </RootNode>
 </Behavior>

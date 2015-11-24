@@ -7,6 +7,7 @@ function Monster(id)
 	console.log("the id is "+id)
 	entity_js.Entity.call(this,id)
     this._type = 'Monster'
+    this.count = 1
     // this.position = [10,2,0]
 
 	this.talk = function()
