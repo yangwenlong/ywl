@@ -2,14 +2,21 @@
 var entity_js = require('./entity.js')
 var state_machine = require('../state_machine/state.js')
 var bt_tree = require("../ai/bt_tree.js")
+var physics = require("../physics/movement.js")
 
 function Monster(id)
 {
 	console.log("the id is "+id)
 	entity_js.Entity.call(this,id)
+	this.movement = new physics.entity_physics(this)
     this._type = 'Monster'
     this.count = 1
     // this.position = [10,2,0]
+
+    this.seek = function(target_pos)
+    {
+    	this.movement.seek(target_pos)
+    }
 
 	this.talk = function()
 	{
@@ -51,7 +58,7 @@ Monster.prototype.enterWorld = function()
 	// setTimeout(this.fighting,5000)
 	// setTimeout(this.runaway,10000)
 	// this.showTextAction(0,"hahah")
-	this.run_bt()
+	//this.run_bt()
 }
 
 // //pos为偏移量

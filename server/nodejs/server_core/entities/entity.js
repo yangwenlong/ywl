@@ -22,9 +22,6 @@ Entity.prototype = {
         return this._position
     },
     set position(pos){
-        if(math.distance(this._position,pos)<=0.5)
-            //几乎位置没变化，不理会
-            return
         this._position = pos
         rpc_proxy(this,"set_position",pos)
     },

@@ -84,7 +84,6 @@ SeekAction.prototype._execute = function(tick)
 SeekAction.prototype.step = function(tick)
 {
 	
-	
 }
 
 
