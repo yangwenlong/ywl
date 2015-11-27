@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UI_ManagerNS;
 
 namespace EntityNS
 {
@@ -23,9 +24,13 @@ namespace EntityNS
         public Proxy cell;
 		public Entity()
 		{
+			create_instance ();
+		}
+		public virtual void create_instance()
+		{
 			instance = GameObject.CreatePrimitive (PrimitiveType.Cube);
-            instance.AddComponent<Move>();
-            cell = new Proxy(this);
+			instance.transform.localScale = new Vector3 (10, 10, 1);
+			cell = new Proxy(this);
 		}
 		public int id;
 		public void set_username(String hello)
@@ -48,16 +53,25 @@ namespace EntityNS
 
         public void showTextAction(string text)
         {
-            Debug.Log("this is showTextAction..." + text);
-            GameObject c = GameObject.Find("Text");
-            c.GetComponent<Text>().text = text;
+            //GameObject c = GameObject.Find("Text");
+            //c.GetComponent<Text>().text = text;
+			Debug.Log ("this is showTextAction...." + text+guiManager.getInstance().explaination_text.text);
+			guiManager.getInstance ().explaination_text.text = text;
         }
 	}
 	
 
     public class PlayerAvatar:Entity
     {
-
+		public override void create_instance()
+		{
+			instance = GameObject.CreatePrimitive (PrimitiveType.Cube);
+			instance.transform.localScale = new Vector3 (10, 10, 1);
+			cell = new PlayerProxy (this);
+			instance.AddComponent<Move>();
+			instance.AddComponent<SynPlayerProperty> ();
+			instance.name = "hello";
+		}
     }
 
 	public class EntityManager
@@ -136,7 +150,7 @@ namespace EntityNS
 
 				}
 			}
-			//Debug.Log ("the entity si"+mi + ps + EntityManager.getInstance().entities[entid]);
+			Debug.Log ("the entity si"+entity_name+entid+method_name+mi + ps + EntityManager.getInstance().entities[entid]);
 			mi.Invoke(EntityManager.getInstance().entities[entid], ps);
 		}
 	}

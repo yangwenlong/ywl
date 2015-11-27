@@ -1,7 +1,7 @@
 var util = require('util')
 var conn = require('../connection/connection.js')
 var String = require('string')
-
+var math = require("../util/math.js")
 
 function Entity(id)
 {
@@ -22,6 +22,9 @@ Entity.prototype = {
         return this._position
     },
     set position(pos){
+        if(math.distance(this._position,pos)<=0.5)
+            //几乎位置没变化，不理会
+            return
         this._position = pos
         rpc_proxy(this,"set_position",pos)
     },
@@ -46,6 +49,7 @@ var Monster = require('./Monster.js')
 
 var sequence_id = 10000000
 var entities = {}
+var entity_connection = {}
 
 exports.create_entity = function(xml_path,cb_func)
 {
@@ -125,6 +129,19 @@ exports.create_entity = function(xml_path,cb_func)
     })
 }
 
+function set_entity_connection(entid,connection)
+{
+    entity_connection[entid] = connection
+}
+
+function get_entity_connection(entid)
+{
+    return entity_connection[entid]
+}
+
+exports.set_entity_connection = set_entity_connection
+exports.get_entity_connection = get_entity_connection
+
 //function proxy
 function rpc_proxy (entity,function_name,params) {
    var rpc_string = '{'
@@ -140,14 +157,29 @@ function rpc_proxy (entity,function_name,params) {
 
 exports.rpc_proxy = rpc_proxy
 
+//function others proxy
+
+exports.rpc_others_proxy = function(entity,function_name,params)
+{
+   var rpc_string = '{'
+   rpc_string += '"id" : '+ entity.getId()+','
+   rpc_string += '"type" : "__set__function"'+ ','
+   rpc_string += '"_type" : "'+ entity._type+'",'
+   rpc_string += '"function_name" : "'+ function_name+'",'
+   rpc_string += '"params" : '+ JSON.stringify(params)+''
+   rpc_string += '}'
+   conn.tellOthers(get_entity_connection(entity.getId()),rpc_string.length+rpc_string)
+}
+
 //create entity proxy
-exports.rpc_create_proxy = function(entity) {
+exports.rpc_create_proxy = function(entity,client) {
    var rpc_string = '{'
    rpc_string += '"id" : '+ entity.getId()+','
    rpc_string += '"_type" : "'+ entity._type+'",'
    rpc_string += '"type" : "__create_entity"'+ ''
    rpc_string += '}'
    console.log("the rpc_create_proxy...."+rpc_string)
+   set_entity_connection(entity.getId(),client)
    conn.broadcast(rpc_string.length+rpc_string)
 }
 
@@ -169,6 +201,9 @@ exports.getAllEntities = function()
 {
     return entities
 }
+
+
+
 // var e = require('./entity.js')
 // x = function(ent)
 // {

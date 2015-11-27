@@ -51,7 +51,7 @@ exports.start_server = function(server,cb_func)
           // console.log("the current_data is "+current_data)
           current_data = JSON.parse(current_data)
           entid = current_data['id']
-          var ent = require('../entity.js')
+          var ent = require('../entities/entity.js')
           ent.rpc_from_client(entid,current_data['function'],current_data['params'])
 
         }
@@ -71,6 +71,17 @@ exports.broadcast = function(data)
          client = client_list[key]
          client.write(data)
      }
+}
+
+exports.tellOthers = function(client,data)
+{
+    var own_client_name = client.name
+    for(var key in client_list)
+    {
+        current_client = client_list[key]
+        if(current_client.name!=own_client_name)
+          current_client.write(data)
+    }
 }
 
 exports.send_data = function(id,data)

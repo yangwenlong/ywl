@@ -7,7 +7,7 @@ var avatar,monster
 
 function create_entity_cb(ent)
 {
-	ent.position = [Math.random()*100,Math.random()*100,0.0]
+	// ent.position = [Math.random()*100,Math.random()*100,0.0]
 	avatar = ent
 	console.log("the position is "+ent.position)
 }
@@ -33,10 +33,10 @@ function run_bt()
 
 function create_monster_cb(ent)
 {
-	ent.position = [Math.random()*100,Math.random()*100,0.0]
+	// ent.position = [Math.random()*100,Math.random()*100,0.0]
 	monster = ent
 
-	run_bt()
+	// run_bt()
 }
 
 

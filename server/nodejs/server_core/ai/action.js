@@ -19,6 +19,7 @@ ShowTextAction.prototype.step = function(tick)
 		return bt_node.FAILURE
 	}
 	console.log("hahaha"+tables.getAiText(ent.count).TEXT)
+	ent.showTextAction(0,tables.getAiText(ent.count).TEXT)
 	// console.log(inspect(tables))
 	ent.count += 1
 	return bt_node.SUCCESS
@@ -67,6 +68,28 @@ WanderAction.prototype.step = function(tick)
 }
 
 
+var SeekAction = function()
+{
+	bt_node.ActionNode.call(this)
+	this.target_position = null
+}
+SeekAction.prototype = new bt_node.ActionNode()
+
+SeekAction.prototype._execute = function(tick)
+{
+	console.log("this is SeekAction")
+	return this.step(tick)
+}
+
+SeekAction.prototype.step = function(tick)
+{
+	
+	
+}
+
+
+
 
 exports.ShowTextAction = ShowTextAction
 exports.WanderAction = WanderAction
+exports.SeekAction = SeekAction

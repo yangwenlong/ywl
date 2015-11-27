@@ -1,10 +1,12 @@
 <Behavior>
   <RootNode Type="Root">
     <Node Type="Sequence">
-        <Node Module="CircleTrap" params="10000" Type="Condition"/>
-        <Node Module="TimerReached" params="10000" Type="Condition"/>
-        <Node Module="ShowTextAction" params="hahaha" Type="Action"/>
-        <Node Module="WanderAction" params="0.1" Type="Action"/>
+        <Node Module="CircleTrap" params="1" Type="Condition"/>
+        <Node Type="MemLoopSequence">
+	        <Node Module="ShowTextAction" params="hahaha" Type="Action"/>
+	        <Node Module="TimerReached" params="5000" Type="Condition"/>
+    	</Node>
+        <!--<Node Module="WanderAction" params="0.1" Type="Action"/>-->
     </Node>
   </RootNode>
 </Behavior>

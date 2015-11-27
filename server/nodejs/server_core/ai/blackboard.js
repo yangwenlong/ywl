@@ -1,3 +1,5 @@
+var inspect = require("util").inspect
+
 var Blackboard = function() {
     this.initialize();
 }
@@ -12,7 +14,7 @@ Blackboard.prototype.initialize = function() {
 Blackboard.prototype.get_node_value = function(tree,node,ent,property_name,default_value)
 {
 	var value = this._treeid_nodeid_entityid_prop_value[tree.id+"--"+node.id+"--"+ent.id+"--"+property_name]
-	if(value)
+	if(value!=undefined)
 		return value
 	else
 		return default_value

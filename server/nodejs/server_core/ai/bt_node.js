@@ -132,7 +132,7 @@ SelectNode.prototype = new BaseNode()
 
 SelectNode.prototype._execute = function(tick)
 {
-	console.log("this is SelectNode")
+	// console.log("this is SelectNode")
 	for(var child_name in this.children)
 	{
 		var child = this.children[child_name]
@@ -161,7 +161,7 @@ SeqNode.prototype = new BaseNode()
 
 SeqNode.prototype._execute = function(tick)
 {
-	console.log("this is SeqNode")
+	// console.log("this is SeqNode")
 	for(var child_name in this.children)
 	{
 		var child = this.children[child_name]
@@ -182,7 +182,7 @@ var ParallelNode = function()
 ParallelNode.prototype = new BaseNode()
 ParallelNode.prototype._execute = function(tick)
 {
-	console.log("this is ParallelNode")
+	// console.log("this is ParallelNode")
 	for(var child_name in this.children)
 	{
 		var child = this.children[child_name]
@@ -201,7 +201,7 @@ var ActionNode = function()
 ActionNode.prototype = new BaseNode()
 ActionNode.prototype._execute = function(tick)
 {
-	console.log("this is ActionNode")
+	// console.log("this is ActionNode")
 	return this.step(tick)
 }
 
@@ -219,7 +219,7 @@ var ConditionNode = function()
 ConditionNode.prototype = new BaseNode()
 ConditionNode.prototype._execute = function(tick)
 {
-	console.log("this is ConditionNode")
+	// console.log("this is ConditionNode")
 	return this.step(tick)
 }
 ConditionNode.prototype.step = function(tick)
@@ -230,6 +230,57 @@ ConditionNode.prototype.step = function(tick)
 }
 
 
+var MemSequence = function()
+{
+	BaseNode.call(this)
+}
+
+MemSequence.prototype = new BaseNode()
+MemSequence.prototype._execute = function(tick)
+{
+	var child = blackboard.get_node_value(tick.tree,this,tick.ent,'runningChild',0)
+    for (var i=child; i<this.children.length; i++) {
+        var status = this.children[i]._execute(tick)
+
+        if (status !== SUCCESS) {
+            if (status === RUNNING) {
+                blackboard.set_node_value(tick.tree,this,tick.ent,'runningChild',i)
+            }
+            return status
+        }
+    }
+
+    return SUCCESS
+}
+
+
+var MemLoopSequence = function()
+{
+	BaseNode.call(this)
+}
+
+MemLoopSequence.prototype = new BaseNode()
+MemLoopSequence.prototype._execute = function(tick)
+{
+
+	var child = blackboard.get_node_value(tick.tree,this,tick.ent,'runningChild',0)
+	if(child>=this.children.length)
+		child = 0
+    for (var i=child; i<this.children.length; i++) {
+        var status = this.children[i]._execute(tick)
+        if (status !== SUCCESS) {
+            if (status === RUNNING) {
+                blackboard.set_node_value(tick.tree,this,tick.ent,'runningChild',i)
+            }
+            return status
+        }
+    }
+    blackboard.set_node_value(tick.tree,this,tick.ent,'runningChild',0)
+    return SUCCESS
+}
+
+
+
 exports.BaseNode = BaseNode
 exports.LinkNode = LinkNode
 exports.SelectNode = SelectNode
@@ -237,6 +288,8 @@ exports.SeqNode = SeqNode
 exports.ActionNode = ActionNode
 exports.ConditionNode = ConditionNode
 exports.ParallelNode = ParallelNode
+exports.MemSequence = MemSequence
+exports.MemLoopSequence = MemLoopSequence
 exports.START     = START
 exports.SUCCESS   = SUCCESS
 exports.FAILURE   = FAILURE

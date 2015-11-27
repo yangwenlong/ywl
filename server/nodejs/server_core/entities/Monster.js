@@ -1,6 +1,7 @@
 
 var entity_js = require('./entity.js')
 var state_machine = require('../state_machine/state.js')
+var bt_tree = require("../ai/bt_tree.js")
 
 function Monster(id)
 {
@@ -49,7 +50,8 @@ Monster.prototype.enterWorld = function()
 	// setTimeout(this.talk,2000)
 	// setTimeout(this.fighting,5000)
 	// setTimeout(this.runaway,10000)
-	this.showTextAction(0,"hahah")
+	// this.showTextAction(0,"hahah")
+	this.run_bt()
 }
 
 // //pos为偏移量
@@ -57,6 +59,26 @@ Monster.prototype.showTextAction = function(pos,text)
 {
 	entity_js.rpc_proxy(this,'showTextAction',text)
 }
+
+Monster.prototype.run_bt = function()
+{
+	var bt = new bt_tree.Behavior_Tree()
+
+	var run_bt = function(bt,ent,tree)
+	{
+		function handle()
+		{
+
+			// console.log("this is run_bt"+util.inspect(ent,true,20))
+			bt.run_bt(tree,ent)	
+		}
+		
+		setInterval(handle,500)
+	}
+
+	bt.load_behavior_tree("../test/test_bt_.xml",run_bt,bt,this)
+}
+
 
 exports.Monster = Monster
 

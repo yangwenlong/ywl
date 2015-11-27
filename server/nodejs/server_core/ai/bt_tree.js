@@ -98,6 +98,15 @@ Behavior_Tree = function()
 	            		{
 	            			return new bt_node.LinkNode()
 	            		}
+	            		else if(node_type=='MemLoopSequence')
+	            		{
+	            			console.log("this is create..MemLoopSequence")
+	            			return new bt_node.MemLoopSequence()
+	            		}
+	            		else if(node_type=='MemSequence')
+	            		{
+	            			return new bt_node.MemSequence()
+	            		}
 	            		else
 	            		{
 	            			return new bt_node.LinkNode()

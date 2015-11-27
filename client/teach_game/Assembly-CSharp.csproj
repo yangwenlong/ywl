@@ -48,10 +48,13 @@
   <ItemGroup>
      <Compile Include="Assets\Entity\EntityFactory.cs" />
      <Compile Include="Assets\Entity\Move.cs" />
+     <Compile Include="Assets\Entity\SynPlayerProperty.cs" />
      <Compile Include="Assets\EventTriggerListener.cs" />
      <Compile Include="Assets\GameUIs.cs" />
      <Compile Include="Assets\UI_Component\Item.cs" />
      <Compile Include="Assets\UI_Component\RowColumnItemList.cs" />
+     <Compile Include="Assets\UI_Component\ShowText.cs" />
+     <Compile Include="Assets\UI_Component\guiManager.cs" />
      <Compile Include="Assets\create_room_panel.cs" />
      <Compile Include="Assets\hall_panel.cs" />
      <Compile Include="Assets\login_panel.cs" />

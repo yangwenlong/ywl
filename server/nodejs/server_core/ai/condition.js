@@ -13,6 +13,7 @@ TimerReached.prototype = new bt_node.ConditionNode()
 
 TimerReached.prototype._execute = function(tick)
 {
+	console.log("this is TimerReached")
 	return this.step(tick)
 }
 TimerReached.prototype.step = function(tick)
