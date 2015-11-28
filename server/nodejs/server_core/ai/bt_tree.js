@@ -10,8 +10,7 @@ var condition = require("./condition.js")
 Behavior_Tree = function()
 {
 	// this.id = createUUID()
-
-	this.load_behavior_tree = function(file_path,cb_func,tree,params)
+	this.load_behavior_tree = function(file_path,cb_func,params)
 	{
 		
 		xml2js = require('xml2js')
@@ -132,8 +131,14 @@ Behavior_Tree = function()
 	            }
 	           
 	            this.behavior_tree = dfs(bt_root)
-	            console.log("this is created_child_node.."+this.behavior_tree)
-	            cb_func(tree,params,behavior_tree)
+	            // console.log("this is created_child_node.."+this.behavior_tree)
+	            //register the tree to blackboard
+	            blackboard.register_tree(file_path,this.behavior_tree)
+	            if(cb_func)
+	            {
+					cb_func(params)
+	            }
+	            
 	        })  
 	    })
 
@@ -143,7 +148,6 @@ Behavior_Tree = function()
 	{
 	
 		// console.log(util.inspect(tree,true,20))
-
 		if(tree)
 		{
 			var last_open_nodes = global_black_board.get_open_nodes_of_tree(this,ent)

@@ -69,7 +69,7 @@ CircleTrap.prototype = new bt_node.ConditionNode()
 
 CircleTrap.prototype._execute = function(tick)
 {
-	console.log("this is CircleTrap")
+	// console.log("this is CircleTrap")
 	return this.step(tick)
 }
 CircleTrap.prototype.step = function(tick)

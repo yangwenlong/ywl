@@ -1,4 +1,5 @@
 var entity_js = require('../entities/entity.js')
+var server = require("../connection/server.js")
 function create_entity_cb(ent)
 {
 	entity_js.rpc_create_proxy(ent)

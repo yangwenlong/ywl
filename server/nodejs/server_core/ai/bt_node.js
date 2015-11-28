@@ -161,7 +161,7 @@ SeqNode.prototype = new BaseNode()
 
 SeqNode.prototype._execute = function(tick)
 {
-	// console.log("this is SeqNode")
+	console.log("this is SeqNode")
 	for(var child_name in this.children)
 	{
 		var child = this.children[child_name]

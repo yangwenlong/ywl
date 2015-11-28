@@ -86,8 +86,23 @@ SeekAction.prototype.step = function(tick)
 	
 }
 
+var RotateAction = function()
+{
+	bt_node.ActionNode.call(this)
+	this.target_position = null
+}
 
+RotateAction.prototype = new bt_node.ActionNode()
 
+RotateAction.prototype._execute = function(tick)
+{
+
+}
+
+RotateAction.prototype.step = function(tick)
+{
+	
+}
 
 exports.ShowTextAction = ShowTextAction
 exports.WanderAction = WanderAction
