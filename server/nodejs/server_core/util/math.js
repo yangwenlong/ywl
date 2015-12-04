@@ -13,10 +13,20 @@ var Vector3 = function(x,y,z)
 
 	this.add = function(p)
 	{
+		if(p==undefined)
+			return
 		this.x += p.x
 		this.y += p.y
 		this.z += p.z
+		console.log("the add...."+this.x)
 		return this
+	}
+
+	this.n_sub = function(p)
+	{
+		v = new Vector3(this.x,this.y,this.z)
+		v.sub(p)
+		return v
 	}
 
 	this.sub = function(p)
@@ -37,6 +47,8 @@ var Vector3 = function(x,y,z)
 
 	this.div = function(p)
 	{
+		if(p==0)
+			return this
 		this.x /= p
 		this.y /= p
 		this.z /= p

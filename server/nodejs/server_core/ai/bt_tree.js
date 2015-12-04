@@ -7,12 +7,14 @@ var util = require("util")
 var action = require("./action.js")
 var condition = require("./condition.js")
 
+
 Behavior_Tree = function()
 {
 	// this.id = createUUID()
 
-	this.load_behavior_tree = function(file_path,cb_func,tree,params)
+	this.load_behavior_tree = function(file_path,cb_func,params)
 	{
+		
 		
 		xml2js = require('xml2js')
 	    var parser = new xml2js.Parser()
@@ -133,11 +135,12 @@ Behavior_Tree = function()
 	           
 	            this.behavior_tree = dfs(bt_root)
 	            console.log("this is created_child_node.."+this.behavior_tree)
-	            cb_func(tree,params,behavior_tree)
+	            cb_func(this,params)
 	        })  
 	    })
 
 	}
+
 
 	this.run_bt = function(tree,ent)
 	{
@@ -166,8 +169,24 @@ Behavior_Tree = function()
 	}
 }
 
+
+var load_behavior_tree = function(file_path,cb_func,params)
+{
+	if(blackboard.get_tree(file_path))
+	{
+		tree = blackboard.get_tree(file_path)
+		cb_func(tree,params)
+		return
+	}
+	else
+	{
+		bt_tree = new Behavior_Tree()
+		bt_tree.load_behavior_tree(file_path,cb_func,params)
+	}
+}
+
 // Behavior_Tree.prototype
 
 
 exports.Behavior_Tree = Behavior_Tree
-
+exports.load_behavior_tree = load_behavior_tree

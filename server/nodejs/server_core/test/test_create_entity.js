@@ -6,7 +6,16 @@ function create_entity_cb(ent)
 	ent.position = [Math.random()*100,Math.random()*100,0.0]
 	console.log("the position is "+ent.position)
 
+	this.handle = function()
+	{
+		if(ent.tick)
+		{
+			ent.tick(100)
+		}
+	}
+
+	setInterval(this.handle,100)
 }
 
-entity_js.create_entity('../defs/Avatar.xml',create_entity_cb)
+// entity_js.create_entity('../defs/Avatar.xml',create_entity_cb)
 entity_js.create_entity('../defs/Monster.xml',create_entity_cb)

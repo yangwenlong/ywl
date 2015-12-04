@@ -34,6 +34,11 @@ Entity.prototype = {
         rpc_string += '}'
         return rpc_string
     },
+
+    tick:function(tick_time)
+    {
+        
+    }
     
 }
 

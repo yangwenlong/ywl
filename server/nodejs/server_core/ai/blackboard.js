@@ -7,8 +7,18 @@ Blackboard.prototype.initialize = function() {
 	this._treeid_nodeid_entityid_prop_value = {}
 	this._treeid_nodeid_entityid_open = {}
 	this._treeid_entid_open = {}
+	this._tree_file_path = {}
 }
 
+Blackboard.prototype.set_tree = function(tree,file_path)
+{
+	this._tree_file_path[file_path] = tree
+}
+
+Blackboard.prototype.get_tree = function(file_path)
+{
+	return this._tree_file_path[file_path]
+}
 
 //get the node value of a particular entity
 Blackboard.prototype.get_node_value = function(tree,node,ent,property_name,default_value)

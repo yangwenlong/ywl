@@ -39,31 +39,11 @@ WanderAction.prototype._execute = function(tick)
 	return this.step(tick)
 }
 
-WanderAction.prototype.reset_target_position = function(ent)
-{
-	this.target_position = [ent.position[0]+Math.random()*this.wander_radius+1,ent.position[1]+Math.random()*this.wander_radius+1,ent.position[2]]
-}
-
 WanderAction.prototype.step = function(tick)
 {
 	var ent = tick.ent
-	if(!this.target_position)
-	{
-		this.reset_target_position(ent)
-	}
-	if(math.distance(this.target_position,ent.position)<=0.5)
-	{
-		this.reset_target_position(ent)
-		return bt_node.SUCCESS
-	}
-	else
-	{
-		var dir = [this.target_position[0]-ent.position[0],this.target_position[1]-ent.position[1],0]
-		var distance = math.distance(this.target_position,ent.position)
-		dir = [dir[0]*0.5/distance,dir[1]*0.5/distance,0]
-		ent.position = [ent.position[0]+dir[0],ent.position[1]+dir[1],0]
-		return bt_node.RUNNING
-	}
+	ent.wander()
+	return bt_node.RUNNING
 	
 }
 
@@ -83,7 +63,9 @@ SeekAction.prototype._execute = function(tick)
 
 SeekAction.prototype.step = function(tick)
 {
-	
+	var ent = tick.ent
+	ent.seek()
+	return bt_node.RUNNING
 }
 
 

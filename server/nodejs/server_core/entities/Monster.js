@@ -4,6 +4,15 @@ var state_machine = require('../state_machine/state.js')
 var bt_tree = require("../ai/bt_tree.js")
 var physics = require("../physics/movement.js")
 
+var monster_bt = undefined
+
+var load_monster_bt = function(tree,param)
+{
+	monster_bt = tree
+}
+
+bt_tree.load_behavior_tree("../test/test_bt_.xml",load_monster_bt)
+
 function Monster(id)
 {
 	console.log("the id is "+id)
@@ -16,6 +25,11 @@ function Monster(id)
     this.seek = function(target_pos)
     {
     	this.movement.seek(target_pos)
+    }
+
+    this.wander = function()
+    {
+    	this.movement.wander()
     }
 
 	this.talk = function()
@@ -43,6 +57,7 @@ function Monster(id)
 		console.log("runaway..runaway...I hate it"+entity_js.Entity.prototype.position)
 	}
 
+
 	// this.machine = new state_machine.StateMachine(this)
 }
 
@@ -58,7 +73,7 @@ Monster.prototype.enterWorld = function()
 	// setTimeout(this.fighting,5000)
 	// setTimeout(this.runaway,10000)
 	// this.showTextAction(0,"hahah")
-	//this.run_bt()
+	// this.run_bt()
 }
 
 // //pos为偏移量
@@ -69,23 +84,19 @@ Monster.prototype.showTextAction = function(pos,text)
 
 Monster.prototype.run_bt = function()
 {
-	var bt = new bt_tree.Behavior_Tree()
 
-	var run_bt = function(bt,ent,tree)
+	if(monster_bt)
 	{
-		function handle()
-		{
-
-			// console.log("this is run_bt"+util.inspect(ent,true,20))
-			bt.run_bt(tree,ent)	
-		}
-		
-		setInterval(handle,500)
+		monster_bt.run_bt(monster_bt,this)
 	}
-
-	bt.load_behavior_tree("../test/test_bt_.xml",run_bt,bt,this)
 }
 
+Monster.prototype.tick = function(tick_time)
+{
+	this.wander()
+	this.movement.tick(tick_time/1000.0)
+	// this.run_bt()
+}
 
 exports.Monster = Monster
 

@@ -39,13 +39,17 @@ function loop()
 {
 	//同步entity身上的必要属性，比如position之类的
 	
-	// for(var entid in entity_js.getAllEntities())
-	// {
+	for(var entid in entity_js.getAllEntities())
+	{
 
-	// 	ent = entity_js.getAllEntities()[entid]
-	// 	// console.log("the position is "+ent.position)
-	// 	ent.position = [ent.position[0]+1.0,ent.position[1]+0.0,ent.position[2]+0.0]
-	// }
+		ent = entity_js.getAllEntities()[entid]
+		// console.log("the position is "+ent.position)
+		// ent.position = [ent.position[0]+1.0,ent.position[1]+0.0,ent.position[2]+0.0]
+		if(ent.tick)
+		{
+			ent.tick(update_time)
+		}
+	}
 }
 
 server()
