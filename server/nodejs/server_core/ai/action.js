@@ -35,7 +35,7 @@ WanderAction.prototype = new bt_node.ActionNode()
 
 WanderAction.prototype._execute = function(tick)
 {
-	console.log("this is WanderAction")
+	// console.log("this is WanderAction")
 	return this.step(tick)
 }
 

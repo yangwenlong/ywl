@@ -18,13 +18,6 @@ Entity.prototype = {
     leaveWorld:function(){
 
     },
-    get rotation(){
-        return this._rotation
-    },
-    set rotation(rot){
-        this._rotation = rot
-        rpc_proxy(this,"set_rotation",rot)
-    },
     get position(){
         return this._position
     },
@@ -44,7 +37,7 @@ Entity.prototype = {
 
     tick:function(tick_time)
     {
-        //每个frame应该干的东西
+        
     }
     
 }

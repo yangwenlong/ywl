@@ -1,6 +1,5 @@
 var connection = require('./connection.js')
 var entity_js = require('../entities/entity.js')
-
 update_time = 100
 
 
@@ -42,13 +41,16 @@ function loop()
 	
 	for(var entid in entity_js.getAllEntities())
 	{
+
 		ent = entity_js.getAllEntities()[entid]
-		ent.tick(update_time)
 		// console.log("the position is "+ent.position)
 		// ent.position = [ent.position[0]+1.0,ent.position[1]+0.0,ent.position[2]+0.0]
+		if(ent.tick)
+		{
+			ent.tick(update_time)
+		}
 	}
 }
-
 
 server()
 

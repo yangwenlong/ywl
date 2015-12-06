@@ -2,27 +2,46 @@ var net = require('net');
 
 var HOST = '127.0.0.1';
 var PORT = 6969;
+var sockets = []
 
-var client = new net.Socket();
-client.connect(PORT, HOST, function() {
+var create_socket = function()
+{
+	var client = new net.Socket();
+	client.connect(PORT, HOST, function() {
 
-    console.log('CONNECTED TO: ' + HOST + ':' + PORT);
-    // 建立连接后立即向服务器发送数据，服务器将收到这些数据 
-    client.write('I am Chuck Norris!');
+	    // console.log('CONNECTED TO: ' + HOST + ':' + PORT);
+	    sockets.push(client)
+	});
 
-});
+	
+	// 为客户端添加“close”事件处理函数
+	client.on('close', function() {
+	   
+	});
 
-// 为客户端添加“data”事件处理函数
-// data是服务器发回的数据
-client.on('data', function(data) {
+	client.on('error', function(e) {
+	    if(e.code == 'ECONNREFUSED') {
+	        console.log('Is the server running at ' + PORT + '?');
 
-    console.log('DATA: ' + data);
-    // 完全关闭连接
-    client.destroy();
+	        client.setTimeout(4000, function() {
+	            client.connect(PORT, HOST, function(){
+	                console.log('CONNECTED TO: ' + HOST + ':' + PORT);
+	                // client.write('I am the inner superman');
+	            });
+	        });
 
-});
+	        console.log('Timeout for 5 seconds before trying port:' + PORT + ' again');
 
-// 为客户端添加“close”事件处理函数
-client.on('close', function() {
-    console.log('Connection closed');
-});
+    	}   
+	});
+}
+
+var test = function()
+{
+	for(var i=0;i<10000;i++)
+	{
+		create_socket()
+	}
+}
+
+test()

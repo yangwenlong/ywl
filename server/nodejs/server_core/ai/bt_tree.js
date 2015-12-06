@@ -7,12 +7,15 @@ var util = require("util")
 var action = require("./action.js")
 var condition = require("./condition.js")
 
+
 Behavior_Tree = function()
 {
 	// this.id = createUUID()
+
 	this.load_behavior_tree = function(file_path,cb_func,params)
 	{
 		
+		that = this
 		xml2js = require('xml2js')
 	    var parser = new xml2js.Parser()
 	   
@@ -85,7 +88,7 @@ Behavior_Tree = function()
 	            			}
 	            			return new bt_node.ActionNode()
 	            		}
-	            		else if(node_type=='Selector')
+	            		else if(node_type=='SelectNode')
 	            		{
 	            			return new bt_node.SelectNode()
 	            		}
@@ -130,30 +133,26 @@ Behavior_Tree = function()
 	            	
 	            }
 	           
-	            this.behavior_tree = dfs(bt_root)
-	            // console.log("this is created_child_node.."+this.behavior_tree)
-	            //register the tree to blackboard
-	            blackboard.register_tree(file_path,this.behavior_tree)
-	            if(cb_func)
-	            {
-					cb_func(params)
-	            }
-	            
+	            that.behavior_tree = dfs(bt_root)
+	            console.log("this is created_child_node.."+that.behavior_tree)
+	            blackboard.register_tree(file_path,that)
+	            cb_func(that,params)
 	        })  
 	    })
 
 	}
 
+
 	this.run_bt = function(tree,ent)
 	{
 	
 		// console.log(util.inspect(tree,true,20))
-		if(tree)
+		if(tree&&tree.behavior_tree)
 		{
 			var last_open_nodes = global_black_board.get_open_nodes_of_tree(this,ent)
 			
-			var tick = new Tick(this,ent)
-			tree.execute(tick)
+			var tick = new Tick(tree.behavior_tree,ent)
+			tree.behavior_tree.execute(tick)
 
 			var current_open_nodes = tick.get_open_nodes_of_tree()
 
@@ -170,8 +169,24 @@ Behavior_Tree = function()
 	}
 }
 
+
+var load_behavior_tree = function(file_path,cb_func,params)
+{
+	if(blackboard.get_tree_by_path(file_path))
+	{
+		tree = blackboard.get_tree_by_path(file_path)
+		cb_func(tree,params)
+		return
+	}
+	else
+	{
+		bt_tree = new Behavior_Tree()
+		bt_tree.load_behavior_tree(file_path,cb_func,params)
+	}
+}
+
 // Behavior_Tree.prototype
 
 
 exports.Behavior_Tree = Behavior_Tree
-
+exports.load_behavior_tree = load_behavior_tree

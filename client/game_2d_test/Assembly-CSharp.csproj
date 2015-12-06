@@ -72,11 +72,17 @@
      <Compile Include="Assets\test\ShowJoint.cs" />
      <Compile Include="Assets\test\test.cs" />
      <Compile Include="Assets\test\test_rotate.cs" />
+ <Reference Include="UnityEngine.Advertisements">
+ <HintPath>D:/unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>D:/unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>D:/unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
  <HintPath>E:/game_git/ywl/client/game_2d_test/Assets/plugins/LitJson.dll</HintPath>

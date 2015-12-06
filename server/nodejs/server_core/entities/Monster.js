@@ -1,13 +1,18 @@
 
 var entity_js = require('./entity.js')
 var state_machine = require('../state_machine/state.js')
-var physics = require("../physics/movement.js")
-var blackboard = require("../ai/blackboard.js").global_black_board
 var bt_tree = require("../ai/bt_tree.js")
+var physics = require("../physics/movement.js")
 
-var bt = new bt_tree.Behavior_Tree()
-var bt_tree_xml_path = "../test/test_bt_.xml"
-bt.load_behavior_tree(bt_tree_xml_path)
+var monster_bt = undefined
+
+var load_monster_bt = function(tree,param)
+{
+	
+	monster_bt = tree
+}
+
+bt_tree.load_behavior_tree("../test/test_bt_.xml",load_monster_bt)
 
 function Monster(id)
 {
@@ -21,6 +26,11 @@ function Monster(id)
     this.seek = function(target_pos)
     {
     	this.movement.seek(target_pos)
+    }
+
+    this.wander = function()
+    {
+    	this.movement.wander()
     }
 
 	this.talk = function()
@@ -48,6 +58,7 @@ function Monster(id)
 		console.log("runaway..runaway...I hate it"+entity_js.Entity.prototype.position)
 	}
 
+
 	// this.machine = new state_machine.StateMachine(this)
 }
 
@@ -63,8 +74,7 @@ Monster.prototype.enterWorld = function()
 	// setTimeout(this.fighting,5000)
 	// setTimeout(this.runaway,10000)
 	// this.showTextAction(0,"hahah")
-	//this.run_bt()
-	// bt.load_behavior_tree("../test/test_bt_.xml")
+	// this.run_bt()
 }
 
 // //pos为偏移量
@@ -72,33 +82,23 @@ Monster.prototype.showTextAction = function(pos,text)
 {
 	entity_js.rpc_proxy(this,'showTextAction',text)
 }
-/*
+
 Monster.prototype.run_bt = function()
 {
-	var bt = new bt_tree.Behavior_Tree()
 
-	var run_bt = function(bt,ent,tree)
+	if(monster_bt)
 	{
-		function handle()
-		{
-
-			// console.log("this is run_bt"+util.inspect(ent,true,20))
-			bt.run_bt(tree,ent)	
-		}
-		
-		setInterval(handle,500)
+		// var inspect = require("../util/inspect.js").inspect
+		// console.log("the inspect is "+(monster_bt instanceof bt_tree.Behavior_Tree))
+		monster_bt.run_bt(monster_bt,this)
 	}
-
-	bt.load_behavior_tree("../test/test_bt_.xml",run_bt,bt,this)
 }
-*/
+
 Monster.prototype.tick = function(tick_time)
 {
-	//this.seek([10,-10,0])
-	
-	var tree = blackboard.get_tree_by_path(bt_tree_xml_path)
-	bt.run_bt(tree,ent)
+	this.wander()
 	this.movement.tick(tick_time/1000.0)
+	this.run_bt()
 }
 
 exports.Monster = Monster

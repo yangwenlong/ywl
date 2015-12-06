@@ -107,8 +107,10 @@ var LinkNode = function()
 LinkNode.prototype = new BaseNode()
 
 LinkNode.prototype._execute = function(tick) {
+	
 	if(this.children.length==1)
 	{
+		// console.log("this is LinkNode...")	
 		this.children[0].execute(tick)
 	}
     return true
@@ -161,7 +163,7 @@ SeqNode.prototype = new BaseNode()
 
 SeqNode.prototype._execute = function(tick)
 {
-	console.log("this is SeqNode")
+	// console.log("this is SeqNode")
 	for(var child_name in this.children)
 	{
 		var child = this.children[child_name]
