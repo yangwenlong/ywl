@@ -1,3 +1,5 @@
+stack_print = require("./stack_print.js")
+
 var distance = function(p1,p2)
 {
 	var x = (p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[1]-p2[1])*(p1[1]-p2[1]) + (p1[2]-p2[2])*(p1[2]-p2[2])
@@ -14,11 +16,11 @@ var Vector3 = function(x,y,z)
 	this.add = function(p)
 	{
 		if(p==undefined)
-			return
+			return this
 		this.x += p.x
 		this.y += p.y
 		this.z += p.z
-		console.log("the add...."+this.x)
+		// stack_print.printStackTrace()
 		return this
 	}
 

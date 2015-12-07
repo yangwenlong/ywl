@@ -13,30 +13,39 @@ var entity_physics = function(ent)
 
 	this.tick = function(delta_time)
 	{
-		console.log("the velocity is "+this.velocity.x+"xxx"+delta_time+"yy"+this.ent.position[0]+(this.velocity.x*delta_time+this.ent.position[0]))
+		// console.log("the velocity is "+this.velocity.x+"xxx"+delta_time+"yy"+this.ent.position[0]+(this.velocity.x*delta_time+this.ent.position[0]))
 		this.ent.position = [this.ent.position[0]+this.velocity.x*delta_time,this.ent.position[1]+this.velocity.y*delta_time,0]
-		console.log("tick innnnxxxxx....."+this.velocity.x+this.velocity.add(this.acceleration.multi(delta_time)))
+		// console.log("tick innnnxxxxx....."+this.velocity.x+this.velocity.add(this.acceleration.multi(delta_time)))
 		this.velocity.add(this.acceleration.multi(delta_time))
-		console.log("tick innnnxxxxx....."+this.velocity.x+this.acceleration.multi(delta_time))
+		// console.log("tick innnnxxxxx....."+this.velocity.x+this.acceleration.multi(delta_time))
 		var velocity_length = this.velocity.length()
-		console.log("tick innnn....."+this.velocity.x)
+		// console.log("tick innnn....."+this.velocity.x)
 		if(velocity_length>this.max_speed)
 		{
 			this.velocity.multi(this.max_speed/velocity_length)
 		}
-		console.log("tick outn....."+this.velocity.x)
+		// console.log("tick outn....."+this.velocity.x)
 	}
 
 	this.add_force = function(f)
 	{
+		// console.log("the add_force is "+f.x)
 		this.acceleration.add(f.div(this.mass))
 	}
 
-	this.seek = function(target)
+	this.seek = function(_target)
 	{
-		target = new Vector3(target[0],target[1],target[2])
+		if(!(_target instanceof Vector3))
+		{
+			target = new Vector3(_target[0],_target[1],_target[2])
+		}
+		else
+		{
+			target = _target
+		}
 		position = new Vector3(this.ent.position[0],this.ent.position[1],this.ent.position[2])
 		desired_velocity = target.n_sub(position).normalise().multi(this.max_speed)
+		// console.log("the desired_velocity is "+target.x+".."+_target.x)
 		steering = desired_velocity.n_sub(this.velocity)
 		this.add_force(steering)
 	}

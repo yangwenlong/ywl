@@ -7,17 +7,22 @@ Blackboard.prototype.initialize = function() {
 	this._treeid_nodeid_entityid_prop_value = {}
 	this._treeid_nodeid_entityid_open = {}
 	this._treeid_entid_open = {}
-	this._tree_file_path = {}
+	this._treepath_tree = {}
 }
 
-Blackboard.prototype.set_tree = function(tree,file_path)
+Blackboard.prototype.register_tree = function(path,tree)
 {
-	this._tree_file_path[file_path] = tree
+	this._treepath_tree[path] = tree
 }
 
-Blackboard.prototype.get_tree = function(file_path)
+Blackboard.prototype.get_tree_by_path = function(path)
 {
-	return this._tree_file_path[file_path]
+	return this._treepath_tree[path]
+}
+
+Blackboard.prototype.unregister_tree = function(path)
+{
+	delete this._treepath_tree[path]
 }
 
 //get the node value of a particular entity

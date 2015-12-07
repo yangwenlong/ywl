@@ -6,7 +6,7 @@ function printStackTrace() {
   } catch(e) {
     if (e.stack) { //Firefox
       var lines = e.stack.split('\n');
-      for (var i=0, len=lines.length; i&lt;len; i++) {
+      for (var i=0, len=lines.length; i<len; i++) {
         if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
           callstack.push(lines[i]);
         }
@@ -15,9 +15,9 @@ function printStackTrace() {
       callstack.shift();
       isCallstackPopulated = true;
     }
-    else if (window.opera &amp;&amp; e.message) { //Opera
+    else if (e.message) { //Opera
       var lines = e.message.split('\n');
-      for (var i=0, len=lines.length; i&lt;len; i++) {
+      for (var i=0, len=lines.length; i<len; i++) {
         if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
           var entry = lines[i];
           //Append next line also since it has the file info
@@ -33,21 +33,21 @@ function printStackTrace() {
       isCallstackPopulated = true;
     }
   }
-  if (!isCallstackPopulated) { //IE and Safari
-    var currentFunction = arguments.callee.caller;
-    while (currentFunction) {
-      var fn = currentFunction.toString();
-      var fname = fn.substring(fn.indexOf(&amp;quot;function&amp;quot;) + 8, fn.indexOf('')) || 'anonymous';
-      callstack.push(fname);
-      currentFunction = currentFunction.caller;
-    }
-  }
+  // if (!isCallstackPopulated) { //IE and Safari
+  //   var currentFunction = arguments.callee.caller;
+  //   while (currentFunction) {
+  //     var fn = currentFunction.toString();
+  //     var fname = fn.substring(fn.indexOf'') + 8, fn.indexOf('')) || 'anonymous';
+  //     callstack.push(fname);
+  //     currentFunction = currentFunction.caller;
+  //   }
+  // }
   output(callstack);
 }
 
 function output(arr) {
   //Optput however you want
-  alert(arr.join('\n\n'));
+  console.log(arr.join('\n\n'));
 }
 
 

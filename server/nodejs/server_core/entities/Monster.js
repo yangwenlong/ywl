@@ -8,6 +8,7 @@ var monster_bt = undefined
 
 var load_monster_bt = function(tree,param)
 {
+	
 	monster_bt = tree
 }
 
@@ -87,6 +88,8 @@ Monster.prototype.run_bt = function()
 
 	if(monster_bt)
 	{
+		// var inspect = require("../util/inspect.js").inspect
+		// console.log("the inspect is "+(monster_bt instanceof bt_tree.Behavior_Tree))
 		monster_bt.run_bt(monster_bt,this)
 	}
 }
@@ -95,7 +98,7 @@ Monster.prototype.tick = function(tick_time)
 {
 	this.wander()
 	this.movement.tick(tick_time/1000.0)
-	// this.run_bt()
+	this.run_bt()
 }
 
 exports.Monster = Monster

@@ -15,7 +15,7 @@ Behavior_Tree = function()
 	this.load_behavior_tree = function(file_path,cb_func,params)
 	{
 		
-		
+		that = this
 		xml2js = require('xml2js')
 	    var parser = new xml2js.Parser()
 	   
@@ -88,7 +88,7 @@ Behavior_Tree = function()
 	            			}
 	            			return new bt_node.ActionNode()
 	            		}
-	            		else if(node_type=='Selector')
+	            		else if(node_type=='SelectNode')
 	            		{
 	            			return new bt_node.SelectNode()
 	            		}
@@ -133,9 +133,10 @@ Behavior_Tree = function()
 	            	
 	            }
 	           
-	            this.behavior_tree = dfs(bt_root)
-	            console.log("this is created_child_node.."+this.behavior_tree)
-	            cb_func(this,params)
+	            that.behavior_tree = dfs(bt_root)
+	            console.log("this is created_child_node.."+that.behavior_tree)
+	            blackboard.register_tree(file_path,that)
+	            cb_func(that,params)
 	        })  
 	    })
 
@@ -146,13 +147,12 @@ Behavior_Tree = function()
 	{
 	
 		// console.log(util.inspect(tree,true,20))
-
-		if(tree)
+		if(tree&&tree.behavior_tree)
 		{
 			var last_open_nodes = global_black_board.get_open_nodes_of_tree(this,ent)
 			
-			var tick = new Tick(this,ent)
-			tree.execute(tick)
+			var tick = new Tick(tree.behavior_tree,ent)
+			tree.behavior_tree.execute(tick)
 
 			var current_open_nodes = tick.get_open_nodes_of_tree()
 
@@ -172,9 +172,9 @@ Behavior_Tree = function()
 
 var load_behavior_tree = function(file_path,cb_func,params)
 {
-	if(blackboard.get_tree(file_path))
+	if(blackboard.get_tree_by_path(file_path))
 	{
-		tree = blackboard.get_tree(file_path)
+		tree = blackboard.get_tree_by_path(file_path)
 		cb_func(tree,params)
 		return
 	}

@@ -107,8 +107,10 @@ var LinkNode = function()
 LinkNode.prototype = new BaseNode()
 
 LinkNode.prototype._execute = function(tick) {
+	
 	if(this.children.length==1)
 	{
+		// console.log("this is LinkNode...")	
 		this.children[0].execute(tick)
 	}
     return true

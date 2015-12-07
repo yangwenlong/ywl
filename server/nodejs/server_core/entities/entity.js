@@ -153,7 +153,7 @@ function rpc_proxy (entity,function_name,params) {
    rpc_string += '"function_name" : "'+ function_name+'",'
    rpc_string += '"params" : '+ JSON.stringify(params)+''
    rpc_string += '}'
-   console.log("the rpc_proxy...."+rpc_string)
+   // console.log("the rpc_proxy...."+rpc_string)
    conn.broadcast(rpc_string.length+rpc_string)
 }
 
@@ -180,7 +180,7 @@ exports.rpc_create_proxy = function(entity,client) {
    rpc_string += '"_type" : "'+ entity._type+'",'
    rpc_string += '"type" : "__create_entity"'+ ''
    rpc_string += '}'
-   console.log("the rpc_create_proxy...."+rpc_string)
+   // console.log("the rpc_create_proxy...."+rpc_string)
    set_entity_connection(entity.getId(),client)
    conn.broadcast(rpc_string.length+rpc_string)
 }
