@@ -18,7 +18,10 @@ namespace EditorNode
 	public class BaseNode
 	{
 		public Rect windowRect;
+		public Boolean is_selected = false;
 		public List<BaseNode> neighbors = new List<BaseNode>();
+		public BaseNode parent = null;
+
 		public BaseNode (float x,float y)
 		{
 			this.windowRect = new Rect (x,y, 100f, 100f);
@@ -27,10 +30,22 @@ namespace EditorNode
 		public void AddTarget(BaseNode target)
 		{
 			this.neighbors.Add (target);
+			target.parent = this;
 		}
 
-		public void DrawNode()
+		public void DrawNode(int i,GUI.WindowFunction DoWindow)
 		{
+			if (is_selected) {
+				Color pre_color = GUI.color;
+				GUI.color = new Color(106.0f/255,132.0f/255,219.0f/255);
+				this.windowRect = GUI.Window (i, this.windowRect, DoWindow, new GUIContent ("haha"));
+				GUI.color = pre_color;
+			} else {
+				Color pre_color = GUI.color;
+				GUI.color = new Color(0,1,0);
+				this.windowRect = GUI.Window (i, this.windowRect, DoWindow, new GUIContent ("haha"));
+				GUI.color = pre_color;
+			}
 		}
 
 		public void DrawCurve()
@@ -46,6 +61,18 @@ namespace EditorNode
 		public Vector3 GetCenterPosition()
 		{
 			return new Vector3 (this.windowRect.center.x, this.windowRect.center.y, 0);
+		}
+
+		public string NodeToString()
+		{
+			string node_string = "<BaseNode ";
+			node_string += "pos_x=\"" + windowRect.x + "\" pos_y=\"" + windowRect.y + "\" size_x=\""+windowRect.size.x+"\" size_y=\""+windowRect.size.y+"\"";
+			node_string += ">\n";
+			foreach (BaseNode n in neighbors) {
+				node_string += n.NodeToString();
+			}
+			node_string += "</BaseNode>\n";
+			return node_string;
 		}
 	}
 }

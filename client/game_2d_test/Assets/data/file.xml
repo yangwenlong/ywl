@@ -1,0 +1,12 @@
+
+<BaseNode pos_x="411" pos_y="115" size_x="100" size_y="100">
+	<BaseNode pos_x="284" pos_y="239" size_x="100" size_y="100">
+		<BaseNode pos_x="236" pos_y="425" size_x="100" size_y="100">
+		</BaseNode>
+		<BaseNode pos_x="413" pos_y="423" size_x="100" size_y="100">
+			<SubRootNode file="file_sub.xml" pos_x="13" pos_y="53"/>
+		</BaseNode>
+	</BaseNode>
+	<BaseNode pos_x="539" pos_y="240" size_x="100" size_y="100">
+	</BaseNode>
+</BaseNode>

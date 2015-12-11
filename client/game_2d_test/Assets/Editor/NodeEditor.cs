@@ -18,15 +18,19 @@ namespace EditorNode
 
 	public class NodeEditor:EditorWindow
 	{
-
 		public List<BaseNode> nodes = new List<BaseNode>();
+
+		public bool is_selected_state = false;
+		public Vector3 pre_button_position = Vector3.zero;
+		private Vector3[] verts = new Vector3[4];
+		private bool is_draw_curve = false;
 
 		private BaseNode transition_from_node = null;
 
 		[MenuItem ("Window/行为树")]
 		public static void  ShowWindow () 
 		{
-			EditorWindow.GetWindow(typeof(NodeEditor));
+			var window = EditorWindow.GetWindow(typeof(NodeEditor));
 		}
 
 		private int GetMousePositionInRegion(Vector3 mouse_pos)
@@ -44,6 +48,29 @@ namespace EditorNode
 			return in_node_region_index;
 		}
 
+		void CheckNodeIsSelected(Vector3 start,Vector3 end)
+		{
+			float start_x = Math.Min (start.x, end.x);
+			float start_y = Math.Min (start.y, end.y);
+			float end_x = Math.Max (start.x, end.x);
+			float end_y = Math.Max (start.y, end.y);
+			Rect r = new Rect (start_x,start_y,(end_x-start_x),(end_y-start_y));
+			for(int i=0;i<nodes.Count;i++)
+			{
+				BaseNode n = nodes[i];
+				//Debug.Log("the rect is "+r.x+".."+r.y+".."+r.width+"..."+r.height+"----->"+n.windowRect.x+","+n.windowRect.y);
+				if(r.Contains(new Vector3(n.windowRect.x,n.windowRect.y,0)))
+				{
+					//Debug.Log("this is contains");
+					n.is_selected = true;
+				}
+				else
+				{
+					n.is_selected = false;
+				}
+			}
+		}
+
 		void OnGUI () {
 
 			Event e = Event.current;
@@ -51,9 +78,12 @@ namespace EditorNode
 			//判断是否在某个节点内部
 			int in_node_region_index = GetMousePositionInRegion (e.mousePosition);
 
+
 			if (e.button == 1&&e.type==EventType.mouseUp) {
 				GenericMenu menu = new GenericMenu();
+
 				menu.AddItem(new GUIContent("新加一个节点"),false,ContextCallback,e.mousePosition);
+				menu.AddItem(new GUIContent("a/b/c"),false,null,null);
 				if(in_node_region_index>=0)
 				{
 					this.transition_from_node = nodes[in_node_region_index];
@@ -64,16 +94,42 @@ namespace EditorNode
 					menu.AddDisabledItem(new GUIContent("新加一条边"));
 				}
 
-
+				menu.AddItem(new GUIContent("保存所选节点"),false,SaveNodeCallback,null);
+				menu.AddItem(new GUIContent("加载文件"),false,LoadNodeCallback,null);
 				menu.ShowAsContext();
 			}
+			if (e.button == 0 &&( e.type == EventType.mouseDown ||e.type == EventType.mouseUp)) {
+				if(this.is_draw_curve)
+					LinkTarget(e.mousePosition);
+				this.is_draw_curve = false;
+				if (in_node_region_index < 0 && e.button == 0 && e.type == EventType.mouseDown) {
+
+					this.is_selected_state = true;
+					this.pre_button_position = new Vector3 (e.mousePosition.x, e.mousePosition.y, 0);
+				} else if (in_node_region_index < 0 && e.button == 0 && e.type == EventType.mouseUp) {
+					this.is_selected_state = false;
+					this.pre_button_position = Vector3.zero;
+				}  
+			}
 			Handles.BeginGUI();
+
+			if (this.is_selected_state) {
+				verts[0] = this.pre_button_position;
+				verts[1] = new Vector3(this.pre_button_position.x,e.mousePosition.y,0);
+				verts[2] = new Vector3(e.mousePosition.x,e.mousePosition.y,0);
+				verts[3] = new Vector3(e.mousePosition.x,this.pre_button_position.y,0);
+				Handles.DrawSolidRectangleWithOutline(verts, new Color(1,1,1,0.2f),new Color(0,0,0,1));
+
+				CheckNodeIsSelected(verts[0],verts[2]);
+
+				Repaint();
+			}
 
 			for (int i=0; i<nodes.Count; i++) {
 				nodes[i].DrawCurve();
 			}
 
-			if (this.transition_from_node != null) {
+			if (this.transition_from_node != null&&this.is_draw_curve) {
 
 				Vector3 s = this.transition_from_node.GetCenterPosition();
 				Vector3 end = new Vector3(e.mousePosition.x,e.mousePosition.y,0);
@@ -81,13 +137,7 @@ namespace EditorNode
 				
 				if(e.button==0&&e.type==EventType.mouseUp){
 
-					int to_region_index = GetMousePositionInRegion(e.mousePosition);
-					if(to_region_index>=0)
-					{
-						this.transition_from_node.AddTarget(nodes[to_region_index]);
-					}
-
-					this.transition_from_node = null;
+					LinkTarget(e.mousePosition);
 				}
 				Repaint ();
 			}
@@ -95,21 +145,133 @@ namespace EditorNode
 			Handles.EndGUI();
 
 
-
 			BeginWindows();
 			for (int i=0; i<nodes.Count; i++) {
-				nodes[i].windowRect = GUI.Window(i,nodes[i].windowRect,DoWindow,new GUIContent("haha"));
-				nodes[i].DrawNode();
+				nodes[i].DrawNode(i,DoWindow);
 			}
 
-			//windowRect = GUILayout.Window(0, windowRect, DoWindow, "Hi There");
-			//nodes.Add (b);
 			EndWindows();
+		}
+
+		private void LinkTarget(Vector2 mousePosition)
+		{
+			int to_region_index = GetMousePositionInRegion(mousePosition);
+			if(to_region_index>=0)
+			{
+				this.transition_from_node.AddTarget(nodes[to_region_index]);
+			}
+			
+			this.transition_from_node = null;
 		}
 
 		private void AddTransitionCallback(object from_node)
 		{
+			this.is_draw_curve = true;
+		}
 
+		private void SaveNodeCallback(object obj)
+		{
+			List<BaseNode> selected_nodes = new List<BaseNode> ();
+			foreach (BaseNode n in nodes) {
+				if(n.is_selected)
+				{
+					selected_nodes.Add(n);
+				}
+			}
+			Dictionary<BaseNode,int> depth = GetDepth (GetParent());
+			while (selected_nodes.Count>1) {
+				BaseNode a = selected_nodes[0];
+				BaseNode b = selected_nodes[1];
+				selected_nodes.Remove(a);
+				selected_nodes.Remove(b);
+
+				BaseNode lca = GetLCA(a,b,depth);
+				lca.is_selected = true;
+				selected_nodes.Add(lca);
+				Repaint();
+			}
+
+			paint_dfs (selected_nodes [0]);
+
+		}
+
+		private void paint_dfs(BaseNode root)
+		{
+			if (root == null)
+				return;
+			root.is_selected = true;
+			Repaint ();
+			foreach (BaseNode n in root.neighbors) {
+				paint_dfs(n);
+			}
+		}
+
+		private BaseNode GetParent()
+		{
+			foreach (BaseNode n in nodes) {
+				if(n.parent==null)
+					return n;
+			}
+			return null;
+		}
+
+		private Dictionary<BaseNode,int> GetDepth(BaseNode root)
+		{
+			Dictionary<BaseNode,int> depth = new Dictionary<BaseNode, int> ();
+			dfs (root, depth);
+			return depth;
+		}
+
+		private void dfs(BaseNode p,Dictionary<BaseNode,int> depth)
+		{
+			if (p.parent == null)
+				depth[p] = 1;
+			else
+				depth [p] = depth [p.parent] + 1;
+			for (int i=0; i<p.neighbors.Count; i++) {
+				dfs(p.neighbors[i],depth);
+			}
+		}
+
+		private BaseNode GetLCA(BaseNode a,BaseNode b,Dictionary<BaseNode,int> depth)
+		{
+			if (depth [a] < depth [b])
+				return GetLCA (b, a, depth);
+			if (b.parent == null)
+				return b;
+			if (a == b)
+				return b;
+			return GetLCA (a.parent, b, depth);
+		}
+
+		private void LoadNodeCallback(object obj)
+		{
+			RootNode r = new RootNode (0,0);
+			r.Load("data/file.xml");
+
+			foreach (BaseNode n in r.nodes) {
+				nodes.Add(n);
+			}
+			Debug.Log("the node size is ..."+nodes.Count);
+			Repaint ();
+		}
+
+		private void SetSelected(BaseNode n)
+		{
+			n.is_selected = true;
+			foreach (BaseNode c in n.neighbors) {
+				SetSelected(c);
+			}
+		}
+
+		private void WriteNode(BaseNode tree_root,string file_name)
+		{
+			string s = tree_root.NodeToString ();
+
+			using (System.IO.StreamWriter file = new System.IO.StreamWriter(System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, file_name)),true)) {
+				file.Write(s);
+				file.Close();
+			}
 		}
 
 		private void ContextCallback(object obj)
@@ -126,6 +288,8 @@ namespace EditorNode
 		{
 			Handles.DrawBezier(start,end,start+Vector3.right*50,end+Vector3.left*50,Color.red,null,5.0f);
 		}
+
+	
 
 		// Make the contents of the window
 		void DoWindow ( int windowID ) {

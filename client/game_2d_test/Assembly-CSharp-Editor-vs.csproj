@@ -48,6 +48,10 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\BaseNode.cs" />
      <Compile Include="Assets\Editor\NodeEditor.cs" />
+     <Compile Include="Assets\Editor\RootNode.cs" />
+     <None Include="Assets\shader\l_flexColor.shader" />
+     <None Include="Assets\data\file_sub.xml" />
+     <None Include="Assets\data\file.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

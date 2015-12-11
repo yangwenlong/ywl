@@ -72,6 +72,10 @@
      <Compile Include="Assets\test\ShowAnimation.cs" />
      <Compile Include="Assets\test\ShowJoint.cs" />
      <Compile Include="Assets\test\test.cs" />
+     <Compile Include="Assets\test\test_rotate.cs" />
+     <None Include="Assets\shader\l_flexColor.shader" />
+     <None Include="Assets\data\file_sub.xml" />
+     <None Include="Assets\data\file.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
